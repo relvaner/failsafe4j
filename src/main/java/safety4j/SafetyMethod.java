@@ -30,11 +30,11 @@
  */
 package safety4j;
 
-import java.io.ObjectStreamClass;
+import java.util.UUID;
 
 public final class SafetyMethod {
 	
-	public static void run(final String message, final Method method) {
+	public static void run(final String message, final Method method, UUID uuid) {
 		boolean error = false;
 		Exception exception = null;
 		
@@ -43,7 +43,7 @@ public final class SafetyMethod {
 		}
 		catch(Exception e) {
 			if (message!=null)
-				System.out.println(String.format("Method failed: %s (UUID: %d)", message, getSerialVersionUID(method)));
+				System.out.println(String.format("Method failed: %s (UUID: %s)", message, uuid.toString()));
 			
 			method.error(e);
 			error = true;
@@ -54,14 +54,12 @@ public final class SafetyMethod {
 		}
 		
 		if (error)
-			SafetyManager.getInstance().notifyErrorHandler(exception, message, method);
+			SafetyManager.getInstance().notifyErrorHandler(exception, message, uuid);
 	}
 	
-	public static void run(final Method method) {
-		run(null, method);
+	public static void run(final Method method, UUID uuid) {
+		run(null, method, uuid);
 	}
 	
-	public static long getSerialVersionUID(final Method method) {
-		return ObjectStreamClass.lookup(method.getClass()).getSerialVersionUID();
-	}
+	
 }

@@ -30,16 +30,18 @@
  */
 package safety4j;
 
+import java.util.UUID;
+
 import safety4j.utils.TimeoutTimer;
 import safety4j.utils.TimeoutTimerListener;
 
 public final class SafetyThread {
 
-	public static void run(final String message, final Method method, int timeout) {
+	public static void run(final String message, final Method method, final UUID uuid, int timeout) {
 		final Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				SafetyMethod.run(message, method);
+				SafetyMethod.run(message, method, uuid);
 			}
 		});
 		
@@ -49,9 +51,9 @@ public final class SafetyThread {
 			public void task() {
 				thread.stop();
 				if (message!=null)
-					System.out.println(String.format("Method failed (timeout): %s (UUID: %d)", message, SafetyMethod.getSerialVersionUID(method)));
+					System.out.println(String.format("Method failed (timeout): %s (UUID: %s)", message, uuid.toString()));
 				
-				SafetyManager.getInstance().notifyTimeoutHandler(message, method);
+				SafetyManager.getInstance().notifyTimeoutHandler(message, uuid);
 			}
 		});
 		
@@ -65,7 +67,7 @@ public final class SafetyThread {
 		timeoutTimer.interrupt();
 	}
 	
-	public static void run(final Method method, int timeout) {
-		run(null, method, timeout);
+	public static void run(final Method method, final UUID uuid, int timeout) {
+		run(null, method, uuid, timeout);
 	}
 }

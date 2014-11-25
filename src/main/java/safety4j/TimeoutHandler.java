@@ -30,6 +30,8 @@
  */
 package safety4j;
 
+import java.util.UUID;
+
 public interface TimeoutHandler {
-	public void handle(String message, Method method);
+	public void handle(String message, UUID uuid);
 }

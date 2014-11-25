@@ -30,6 +30,8 @@
  */
 package safety4j.examples;
 
+import java.util.UUID;
+
 import safety4j.ErrorHandler;
 import safety4j.Method;
 import safety4j.SafetyManager;
@@ -41,16 +43,14 @@ public class Examples01 {
 	public Examples01() {
 		SafetyManager.getInstance().setErrorHandler(new ErrorHandler() {
 			@Override
-			public void handle(Exception e, String message, Method method) {
+			public void handle(Exception e, String message, UUID uuid) {
 				System.out.println("Exception: "+e.toString());
 				System.out.println("Message: "+message);
-				System.out.println("UUID: "+SafetyMethod.getSerialVersionUID(method));
+				System.out.println("UUID: "+uuid.toString());
 			}
 		});
 		
 		SafetyMethod.run("Methode 1", new Method() {
-			private static final long serialVersionUID = 2651211178992611912L;
-
 			@Override
 			public void run() {
 				@SuppressWarnings("unused")
@@ -66,7 +66,7 @@ public class Examples01 {
 			public void after() {
 				System.out.println("Hello World!");
 			}
-		});
+		}, UUID.randomUUID());
 		
 		System.out.println("YES!");
 	}

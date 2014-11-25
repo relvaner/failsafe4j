@@ -30,6 +30,8 @@
  */
 package safety4j;
 
+import java.util.UUID;
+
 public final class SafetyManager {
 	private static SafetyManager safetyManager;
 	
@@ -50,17 +52,17 @@ public final class SafetyManager {
 		this.errorHandler = errorHandler;
 	}
 	
-	public synchronized void notifyErrorHandler(Exception e, String message, Method method) {
+	public synchronized void notifyErrorHandler(Exception e, String message, UUID uuid) {
 		if (errorHandler!=null)
-			errorHandler.handle(e, message, method);
+			errorHandler.handle(e, message, uuid);
 	}
 	
 	public void setTimeoutHandler(TimeoutHandler timeoutHandler) {
 		this.timeoutHandler = timeoutHandler;
 	}
 	
-	public synchronized void notifyTimeoutHandler(String message, Method method) {
+	public synchronized void notifyTimeoutHandler(String message, UUID uuid) {
 		if (timeoutHandler!=null)
-			timeoutHandler.handle(message, method);
+			timeoutHandler.handle(message, uuid);
 	}
 }

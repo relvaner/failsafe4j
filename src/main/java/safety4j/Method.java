@@ -30,9 +30,7 @@
  */
 package safety4j;
 
-import java.io.Serializable;
-
-public interface Method extends Serializable {
+public interface Method {
 	public void run();
 	public void error(Exception e);
 	public void after();

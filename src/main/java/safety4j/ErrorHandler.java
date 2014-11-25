@@ -30,6 +30,8 @@
  */
 package safety4j;
 
+import java.util.UUID;
+
 public interface ErrorHandler {
-	public void handle(Exception e, String message, Method method);
+	public void handle(Exception e, String message, UUID uuid);
 }

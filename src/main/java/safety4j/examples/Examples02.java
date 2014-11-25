@@ -30,10 +30,11 @@
  */
 package safety4j.examples;
 
+import java.util.UUID;
+
 import safety4j.ErrorHandler;
 import safety4j.Method;
 import safety4j.SafetyManager;
-import safety4j.SafetyMethod;
 import safety4j.SafetyThread;
 import safety4j.TimeoutHandler;
 
@@ -42,20 +43,18 @@ public class Examples02 {
 	public Examples02() {
 		SafetyManager.getInstance().setErrorHandler(new ErrorHandler() {
 			@Override
-			public void handle(Exception e, String message, Method method) {
-				System.out.println(String.format("ErrorHandler - Exception: %s - %s (UUID=%d)", e.toString(), message, SafetyMethod.getSerialVersionUID(method)));
+			public void handle(Exception e, String message, UUID uuid) {
+				System.out.println(String.format("ErrorHandler - Exception: %s - %s (UUID=%s)", e.toString(), message, uuid.toString()));
 			}
 		});
 		SafetyManager.getInstance().setTimeoutHandler(new TimeoutHandler() {
 			@Override
-			public void handle(String message, Method method) {
-				System.out.println(String.format("TimeoutHandler - %s (UUID=%d)", message, SafetyMethod.getSerialVersionUID(method)));
+			public void handle(String message, UUID uuid) {
+				System.out.println(String.format("TimeoutHandler - %s (UUID=%s)", message, uuid.toString()));
 			}
 		});
 		
 		Method method = new Method() {
-			private static final long serialVersionUID = 2651211178992611912L;
-
 			@Override
 			public void run() {
 				@SuppressWarnings("unused")
@@ -78,7 +77,7 @@ public class Examples02 {
 			}
 		};
 		
-		SafetyThread.run("Methode 1", method, 1000);
+		SafetyThread.run("Methode 1", method, UUID.randomUUID(), 1000);
 		
 		System.out.println("YES!");
 	}
