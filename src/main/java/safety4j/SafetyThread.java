@@ -34,10 +34,13 @@ import java.util.UUID;
 
 import safety4j.utils.TimeoutTimer;
 import safety4j.utils.TimeoutTimerListener;
+import tools4j.references.ReferenceBoolean;
 
 public final class SafetyThread {
 
-	public static void run(final String message, final Method method, final UUID uuid, int timeout) {
+	public static boolean run(final String message, final Method method, final UUID uuid, int timeout) {
+		final ReferenceBoolean result = new ReferenceBoolean(true);
+		
 		final Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -49,11 +52,14 @@ public final class SafetyThread {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void task() {
-				thread.stop();
+				result.setValue(false);
+				
 				if (message!=null)
 					System.out.println(String.format("Method failed (timeout): %s (UUID: %s)", message, uuid.toString()));
 				
 				SafetyManager.getInstance().notifyTimeoutHandler(message, uuid);
+				
+				thread.stop();
 			}
 		});
 		
@@ -65,6 +71,8 @@ public final class SafetyThread {
 			e.printStackTrace();
 		}
 		timeoutTimer.interrupt();
+		
+		return result.getValue();
 	}
 	
 	public static void run(final Method method, final UUID uuid, int timeout) {

@@ -39,7 +39,7 @@ public final class SafetyMethod {
 		Exception exception = null;
 		
 		try {
-			method.run();
+			method.run(uuid);
 		}
 		catch(Exception e) {
 			if (message!=null)

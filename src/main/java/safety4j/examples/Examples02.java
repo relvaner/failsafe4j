@@ -56,9 +56,11 @@ public class Examples02 {
 		
 		Method method = new Method() {
 			@Override
-			public void run() {
+			public void run(UUID uuid) {
+				/*
 				@SuppressWarnings("unused")
 				int z = 67/0;
+				*/
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {

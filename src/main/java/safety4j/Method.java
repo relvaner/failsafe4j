@@ -30,8 +30,10 @@
  */
 package safety4j;
 
+import java.util.UUID;
+
 public interface Method {
-	public void run();
+	public void run(UUID uuid);
 	public void error(Exception e);
 	public void after();
 }
