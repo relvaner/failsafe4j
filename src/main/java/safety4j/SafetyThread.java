@@ -1,6 +1,6 @@
 /*
  * safety4j - Safety Library
- * Copyright (c) 2014, David A. Bauer
+ * Copyright (c) 2014-2015, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -31,15 +31,15 @@
 package safety4j;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import safety4j.utils.TimeoutTimer;
 import safety4j.utils.TimeoutTimerListener;
-import tools4j.references.ReferenceBoolean;
 
 public final class SafetyThread {
 
 	public static boolean run(final String message, final Method method, final UUID uuid, int timeout) {
-		final ReferenceBoolean result = new ReferenceBoolean(true);
+		final AtomicBoolean result = new AtomicBoolean(true);
 		
 		final Thread thread = new Thread(new Runnable() {
 			@Override
@@ -52,10 +52,10 @@ public final class SafetyThread {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void task() {
-				result.setValue(false);
+				result.set(false);
 				
 				if (message!=null)
-					System.out.println(String.format("Method failed (timeout): %s (UUID: %s)", message, uuid.toString()));
+					System.out.printf("Method failed (timeout): %s (UUID: %s)%n", message, uuid.toString());
 				
 				SafetyManager.getInstance().notifyTimeoutHandler(message, uuid);
 				
@@ -72,7 +72,7 @@ public final class SafetyThread {
 		}
 		timeoutTimer.interrupt();
 		
-		return result.getValue();
+		return result.get();
 	}
 	
 	public static void run(final Method method, final UUID uuid, int timeout) {

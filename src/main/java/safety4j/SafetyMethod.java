@@ -43,7 +43,7 @@ public final class SafetyMethod {
 		}
 		catch(Exception e) {
 			if (message!=null)
-				System.out.println(String.format("Method failed: %s (UUID: %s)", message, uuid.toString()));
+				System.out.printf("Method failed: %s (UUID: %s)%n", message, uuid.toString());
 			
 			method.error(e);
 			error = true;
