@@ -38,13 +38,14 @@ public final class SafetyManager {
 	private ErrorHandler errorHandler;
 	private TimeoutHandler timeoutHandler;
 	
+	static {
+		safetyManager = new SafetyManager();
+	}
+	
 	private SafetyManager() { 
 	}
 	
 	public static SafetyManager getInstance() {
-		if (safetyManager==null)
-			safetyManager = new SafetyManager();
-			
 		return safetyManager;	
 	}
 	
