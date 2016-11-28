@@ -42,6 +42,8 @@ import safety4j.TimeoutHandler;
 public class Examples03 {
 	
 	public Examples03() {
+		final SafetyManager safetyManager = new SafetyManager();
+		
 		final Method method = new Method() {
 			@Override
 			public void run(UUID uuid) {
@@ -49,7 +51,7 @@ public class Examples03 {
 				@SuppressWarnings("unused")
 				int z = 67 / 0;
 				*/
-				boolean success = SafetyThread.run("Method1.Block1", new Method() {
+				boolean success = SafetyThread.run(safetyManager, "Method1.Block1", new Method() {
 					@Override
 					public void run(UUID uuid) {
 						try {
@@ -86,17 +88,17 @@ public class Examples03 {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				SafetyMethod.run("Methode 1", method, UUID.randomUUID()); 
+				SafetyMethod.run(safetyManager, "Methode 1", method, UUID.randomUUID()); 
 			}
 		});
 		
-		SafetyManager.getInstance().setErrorHandler(new ErrorHandler() {
+		safetyManager.setErrorHandler(new ErrorHandler() {
 			@Override
 			public void handle(Exception e, String message, UUID uuid) {
 				System.out.println(String.format("ErrorHandler - Exception: %s - %s (UUID=%s)", e.toString(), message, uuid.toString()));
 			}
 		});
-		SafetyManager.getInstance().setTimeoutHandler(new TimeoutHandler() {
+		safetyManager.setTimeoutHandler(new TimeoutHandler() {
 			@Override
 			public void handle(String message, UUID uuid) {
 				System.out.println(String.format("TimeoutHandler - %s (UUID=%s)", message, uuid.toString()));

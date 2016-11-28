@@ -1,6 +1,6 @@
 /*
  * safety4j - Safety Library
- * Copyright (c) 2014, David A. Bauer
+ * Copyright (c) 2014-2016, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -33,21 +33,8 @@ package safety4j;
 import java.util.UUID;
 
 public final class SafetyManager {
-	private static SafetyManager safetyManager;
-	
-	private ErrorHandler errorHandler;
-	private TimeoutHandler timeoutHandler;
-	
-	static {
-		safetyManager = new SafetyManager();
-	}
-	
-	private SafetyManager() { 
-	}
-	
-	public static SafetyManager getInstance() {
-		return safetyManager;	
-	}
+	protected ErrorHandler errorHandler;
+	protected TimeoutHandler timeoutHandler;
 	
 	public void setErrorHandler(ErrorHandler errorHandler) {
 		this.errorHandler = errorHandler;

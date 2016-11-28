@@ -1,6 +1,6 @@
 /*
  * safety4j - Safety Library
- * Copyright (c) 2014, David A. Bauer
+ * Copyright (c) 2014-2016, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,8 @@ import safety4j.SafetyMethod;
 public class Examples01 {
 
 	public Examples01() {
-		SafetyManager.getInstance().setErrorHandler(new ErrorHandler() {
+		SafetyManager safetyManager = new SafetyManager();
+		safetyManager.setErrorHandler(new ErrorHandler() {
 			@Override
 			public void handle(Exception e, String message, UUID uuid) {
 				System.out.println("Exception: "+e.toString());
@@ -50,7 +51,7 @@ public class Examples01 {
 			}
 		});
 		
-		SafetyMethod.run("Methode 1", new Method() {
+		SafetyMethod.run(safetyManager, "Methode 1", new Method() {
 			@Override
 			public void run(UUID uuid) {
 				@SuppressWarnings("unused")

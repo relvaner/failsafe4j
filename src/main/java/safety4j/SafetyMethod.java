@@ -1,6 +1,6 @@
 /*
  * safety4j - Safety Library
- * Copyright (c) 2014, David A. Bauer
+ * Copyright (c) 2014-2016, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -33,8 +33,7 @@ package safety4j;
 import java.util.UUID;
 
 public final class SafetyMethod {
-	
-	public static void run(final String message, final Method method, UUID uuid) {
+	public static void run(final SafetyManager safetyManager, final String message, final Method method, UUID uuid) {
 		boolean error = false;
 		Exception exception = null;
 		
@@ -54,12 +53,10 @@ public final class SafetyMethod {
 		}
 		
 		if (error)
-			SafetyManager.getInstance().notifyErrorHandler(exception, message, uuid);
+			safetyManager.notifyErrorHandler(exception, message, uuid);
 	}
 	
-	public static void run(final Method method, UUID uuid) {
-		run(null, method, uuid);
+	public static void run(final SafetyManager safetyManager, final Method method, UUID uuid) {
+		run(safetyManager, null, method, uuid);
 	}
-	
-	
 }
