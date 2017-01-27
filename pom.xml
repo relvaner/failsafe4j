@@ -85,7 +85,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<dependency>
 			<groupId>com.github.relvaner</groupId>
 			<artifactId>tools4j</artifactId>
-			<version>1.0.0</version>
+			<version>master-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
