@@ -35,7 +35,11 @@ import java.util.UUID;
 public final class SafetyManager {
 	protected ErrorHandler errorHandler;
 	protected TimeoutHandler timeoutHandler;
-	
+		
+	public ErrorHandler getErrorHandler() {
+		return errorHandler;
+	}
+
 	public void setErrorHandler(ErrorHandler errorHandler) {
 		this.errorHandler = errorHandler;
 	}
@@ -43,6 +47,10 @@ public final class SafetyManager {
 	public synchronized void notifyErrorHandler(Exception e, String message, UUID uuid) {
 		if (errorHandler!=null)
 			errorHandler.handle(e, message, uuid);
+	}
+	
+	public TimeoutHandler getTimeoutHandler() {
+		return timeoutHandler;
 	}
 	
 	public void setTimeoutHandler(TimeoutHandler timeoutHandler) {
