@@ -1,6 +1,6 @@
 /*
  * safety4j - Safety Library
- * Copyright (c) 2014, David A. Bauer
+ * Copyright (c) 2014-2017, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,6 @@ import java.util.UUID;
 
 public interface Method {
 	public void run(UUID uuid);
-	public void error(Exception e);
+	public void error(Throwable t);
 	public void after();
 }

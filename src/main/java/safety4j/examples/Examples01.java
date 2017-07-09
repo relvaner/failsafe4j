@@ -1,6 +1,6 @@
 /*
  * safety4j - Safety Library
- * Copyright (c) 2014-2016, David A. Bauer
+ * Copyright (c) 2014-2017, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -44,8 +44,8 @@ public class Examples01 {
 		SafetyManager safetyManager = new SafetyManager();
 		safetyManager.setErrorHandler(new ErrorHandler() {
 			@Override
-			public void handle(Exception e, String message, UUID uuid) {
-				System.out.println("Exception: "+e.toString());
+			public void handle(Throwable t, String message, UUID uuid) {
+				System.out.println("Exception: "+t.toString());
 				System.out.println("Message: "+message);
 				System.out.println("UUID: "+uuid.toString());
 			}
@@ -59,8 +59,8 @@ public class Examples01 {
 			}
 
 			@Override
-			public void error(Exception e) {
-				System.out.println(e.getMessage());
+			public void error(Throwable t) {
+				System.out.println(t.getMessage());
 			}
 			
 			@Override

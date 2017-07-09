@@ -1,6 +1,6 @@
 /*
  * safety4j - Safety Library
- * Copyright (c) 2014-2016, David A. Bauer
+ * Copyright (c) 2014-2017, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -62,7 +62,7 @@ public class Examples03 {
 					}
 
 					@Override
-					public void error(Exception e) {
+					public void error(Throwable t) {
 					}
 
 					@Override
@@ -75,8 +75,8 @@ public class Examples03 {
 			}
 
 			@Override
-			public void error(Exception e) {
-				System.out.println(e.getMessage());
+			public void error(Throwable t) {
+				System.out.println(t.getMessage());
 			}
 			
 			@Override
@@ -94,8 +94,8 @@ public class Examples03 {
 		
 		safetyManager.setErrorHandler(new ErrorHandler() {
 			@Override
-			public void handle(Exception e, String message, UUID uuid) {
-				System.out.println(String.format("ErrorHandler - Exception: %s - %s (UUID=%s)", e.toString(), message, uuid.toString()));
+			public void handle(Throwable t, String message, UUID uuid) {
+				System.out.println(String.format("ErrorHandler - Exception: %s - %s (UUID=%s)", t.toString(), message, uuid.toString()));
 			}
 		});
 		safetyManager.setTimeoutHandler(new TimeoutHandler() {

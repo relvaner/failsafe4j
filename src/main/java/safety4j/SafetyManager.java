@@ -1,6 +1,6 @@
 /*
  * safety4j - Safety Library
- * Copyright (c) 2014-2016, David A. Bauer
+ * Copyright (c) 2014-2017, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -44,9 +44,9 @@ public final class SafetyManager {
 		this.errorHandler = errorHandler;
 	}
 	
-	public synchronized void notifyErrorHandler(Exception e, String message, UUID uuid) {
+	public synchronized void notifyErrorHandler(Throwable t, String message, UUID uuid) {
 		if (errorHandler!=null)
-			errorHandler.handle(e, message, uuid);
+			errorHandler.handle(t, message, uuid);
 	}
 	
 	public TimeoutHandler getTimeoutHandler() {

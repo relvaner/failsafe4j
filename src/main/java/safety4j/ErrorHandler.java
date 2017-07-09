@@ -1,6 +1,6 @@
 /*
  * safety4j - Safety Library
- * Copyright (c) 2014, David A. Bauer
+ * Copyright (c) 2014-2017, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -33,5 +33,5 @@ package safety4j;
 import java.util.UUID;
 
 public interface ErrorHandler {
-	public void handle(Exception e, String message, UUID uuid);
+	public void handle(Throwable t, String message, UUID uuid);
 }

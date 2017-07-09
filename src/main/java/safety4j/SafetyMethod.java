@@ -1,6 +1,6 @@
 /*
  * safety4j - Safety Library
- * Copyright (c) 2014-2016, David A. Bauer
+ * Copyright (c) 2014-2017, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,7 +56,34 @@ public final class SafetyMethod {
 			safetyManager.notifyErrorHandler(exception, message, uuid);
 	}
 	
+	public static void runAndCatchThrowable(final SafetyManager safetyManager, final String message, final Method method, UUID uuid) {
+		boolean error = false;
+		Throwable throwable = null;
+		
+		try {
+			method.run(uuid);
+		}
+		catch(Throwable t) {
+			if (message!=null)
+				System.out.printf("Method failed: %s (UUID: %s)%n", message, uuid.toString());
+			
+			method.error(t);
+			error = true;
+			throwable = t;
+		}
+		finally {
+			method.after();
+		}
+		
+		if (error)
+			safetyManager.notifyErrorHandler(throwable, message, uuid);
+	}
+	
 	public static void run(final SafetyManager safetyManager, final Method method, UUID uuid) {
 		run(safetyManager, null, method, uuid);
+	}
+	
+	public static void runAndCatchThrowable(final SafetyManager safetyManager, final Method method, UUID uuid) {
+		runAndCatchThrowable(safetyManager, null, method, uuid);
 	}
 }

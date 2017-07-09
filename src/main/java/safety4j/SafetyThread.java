@@ -1,6 +1,6 @@
 /*
  * safety4j - Safety Library
- * Copyright (c) 2014-2016, David A. Bauer
+ * Copyright (c) 2014-2017, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -38,12 +38,23 @@ import safety4j.utils.TimeoutTimerListener;
 
 public final class SafetyThread {
 	public static boolean run(final SafetyManager safetyManager, final String message, final Method method, final UUID uuid, int timeout) {
+		return run(safetyManager, message, method, uuid, timeout, false);
+	}
+	
+	public static boolean runAndCatchThrowable(final SafetyManager safetyManager, final String message, final Method method, final UUID uuid, int timeout) {
+		return run(safetyManager, message, method, uuid, timeout, true);
+	}
+	
+	protected static boolean run(final SafetyManager safetyManager, final String message, final Method method, final UUID uuid, int timeout, boolean catchThrowable) {
 		final AtomicBoolean result = new AtomicBoolean(true);
 		
 		final Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				SafetyMethod.run(safetyManager, message, method, uuid);
+				if (!catchThrowable)
+					SafetyMethod.run(safetyManager, message, method, uuid);
+				else
+					SafetyMethod.runAndCatchThrowable(safetyManager, message, method, uuid);
 			}
 		});
 		
@@ -76,5 +87,9 @@ public final class SafetyThread {
 	
 	public static void run(final SafetyManager safetyManager, final Method method, final UUID uuid, int timeout) {
 		run(safetyManager, null, method, uuid, timeout);
+	}
+	
+	public static void runAndCatchThrowable(final SafetyManager safetyManager, final Method method, final UUID uuid, int timeout) {
+		runAndCatchThrowable(safetyManager, null, method, uuid, timeout);
 	}
 }
