@@ -1,6 +1,6 @@
 <!--
-safety4j - Safety Library
-Copyright (c) 2014-2015, David A. Bauer
+failsafe4j - Failsafe Library
+Copyright (c) 2014-2020, David A. Bauer
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,13 +30,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>safety4j</groupId>
-	<artifactId>safety4j</artifactId>
-	<name>safety4j</name>
-	<version>0.1.1</version>
+	<groupId>failsafe4j</groupId>
+	<artifactId>failsafe4j</artifactId>
+	<name>failsafe4j</name>
+	<version>0.1.2</version>
 	<packaging>jar</packaging>
 
-	<description>Safety Library</description>
+	<description>Failsafe Library</description>
 	<inceptionYear>2014</inceptionYear>
 	
 	<developers>

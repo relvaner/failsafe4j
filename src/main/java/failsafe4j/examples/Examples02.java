@@ -1,6 +1,6 @@
 /*
- * safety4j - Safety Library
- * Copyright (c) 2014-2017, David A. Bauer
+ * failsafe4j - Failsafe Library
+ * Copyright (c) 2014-2020, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -28,62 +28,64 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package safety4j;
+package failsafe4j.examples;
 
 import java.util.UUID;
 
-public final class SafetyMethod {
-	public static void run(final SafetyManager safetyManager, final String message, final Method method, UUID uuid) {
-		boolean error = false;
-		Exception exception = null;
+import failsafe4j.ErrorHandler;
+import failsafe4j.Method;
+import failsafe4j.FailsafeManager;
+import failsafe4j.FailsafeThread;
+import failsafe4j.TimeoutHandler;
+
+public class Examples02 {
+	
+	public Examples02() {
+		FailsafeManager failsafeManager = new FailsafeManager();
+		failsafeManager.setErrorHandler(new ErrorHandler() {
+			@Override
+			public void handle(Throwable t, String message, UUID uuid) {
+				System.out.println(String.format("ErrorHandler - Exception: %s - %s (UUID=%s)", t.toString(), message, uuid.toString()));
+			}
+		});
+		failsafeManager.setTimeoutHandler(new TimeoutHandler() {
+			@Override
+			public void handle(String message, UUID uuid) {
+				System.out.println(String.format("TimeoutHandler - %s (UUID=%s)", message, uuid.toString()));
+			}
+		});
 		
-		try {
-			method.run(uuid);
-		}
-		catch(Exception e) {
-			if (message!=null)
-				System.out.printf("Method failed: %s (UUID: %s)%n", message, uuid.toString());
+		Method method = new Method() {
+			@Override
+			public void run(UUID uuid) {
+				/*
+				@SuppressWarnings("unused")
+				int z = 67/0;
+				*/
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public void error(Throwable t) {
+				// System.out.println(e.getMessage());
+			}
 			
-			method.error(e);
-			error = true;
-			exception = e;
-		}
-		finally {
-			method.after();
-		}
+			@Override
+			public void after() {
+				System.out.println("Hello World!");
+			}
+		};
 		
-		if (error)
-			safetyManager.notifyErrorHandler(exception, message, uuid);
+		FailsafeThread.run(failsafeManager, "Methode 1", method, UUID.randomUUID(), 1000);
+		
+		System.out.println("YES!");
 	}
 	
-	public static void runAndCatchThrowable(final SafetyManager safetyManager, final String message, final Method method, UUID uuid) {
-		boolean error = false;
-		Throwable throwable = null;
-		
-		try {
-			method.run(uuid);
-		}
-		catch(Throwable t) {
-			if (message!=null)
-				System.out.printf("Method failed: %s (UUID: %s)%n", message, uuid.toString());
-			
-			method.error(t);
-			error = true;
-			throwable = t;
-		}
-		finally {
-			method.after();
-		}
-		
-		if (error)
-			safetyManager.notifyErrorHandler(throwable, message, uuid);
-	}
-	
-	public static void run(final SafetyManager safetyManager, final Method method, UUID uuid) {
-		run(safetyManager, null, method, uuid);
-	}
-	
-	public static void runAndCatchThrowable(final SafetyManager safetyManager, final Method method, UUID uuid) {
-		runAndCatchThrowable(safetyManager, null, method, uuid);
+	public static void main(String[] args) {
+		new Examples02();
 	}
 }

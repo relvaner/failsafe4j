@@ -1,6 +1,6 @@
 /*
- * safety4j - Safety Library
- * Copyright (c) 2014-2017, David A. Bauer
+ * failsafe4j - Failsafe Library
+ * Copyright (c) 2014-2020, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -28,34 +28,50 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package safety4j.examples;
+package failsafe4j.examples;
 
 import java.util.UUID;
 
-import safety4j.ErrorHandler;
-import safety4j.Method;
-import safety4j.SafetyManager;
-import safety4j.SafetyMethod;
+import failsafe4j.ErrorHandler;
+import failsafe4j.Method;
+import failsafe4j.FailsafeManager;
+import failsafe4j.FailsafeMethod;
+import failsafe4j.FailsafeThread;
+import failsafe4j.TimeoutHandler;
 
-
-public class Examples01 {
-
-	public Examples01() {
-		SafetyManager safetyManager = new SafetyManager();
-		safetyManager.setErrorHandler(new ErrorHandler() {
-			@Override
-			public void handle(Throwable t, String message, UUID uuid) {
-				System.out.println("Exception: "+t.toString());
-				System.out.println("Message: "+message);
-				System.out.println("UUID: "+uuid.toString());
-			}
-		});
+public class Examples03 {
+	
+	public Examples03() {
+		final FailsafeManager failsafeManager = new FailsafeManager();
 		
-		SafetyMethod.run(safetyManager, "Methode 1", new Method() {
+		final Method method = new Method() {
 			@Override
 			public void run(UUID uuid) {
+				/*
 				@SuppressWarnings("unused")
 				int z = 67 / 0;
+				*/
+				boolean success = FailsafeThread.run(failsafeManager, "Method1.Block1", new Method() {
+					@Override
+					public void run(UUID uuid) {
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+
+					@Override
+					public void error(Throwable t) {
+					}
+
+					@Override
+					public void after() {
+					}
+				}, uuid, 1000);
+				
+				if (!success)
+					System.out.println("Thread failed!");
 			}
 
 			@Override
@@ -67,12 +83,32 @@ public class Examples01 {
 			public void after() {
 				System.out.println("Hello World!");
 			}
-		}, UUID.randomUUID());
+		};
 		
-		System.out.println("YES!");
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				FailsafeMethod.run(failsafeManager, "Methode 1", method, UUID.randomUUID()); 
+			}
+		});
+		
+		failsafeManager.setErrorHandler(new ErrorHandler() {
+			@Override
+			public void handle(Throwable t, String message, UUID uuid) {
+				System.out.println(String.format("ErrorHandler - Exception: %s - %s (UUID=%s)", t.toString(), message, uuid.toString()));
+			}
+		});
+		failsafeManager.setTimeoutHandler(new TimeoutHandler() {
+			@Override
+			public void handle(String message, UUID uuid) {
+				System.out.println(String.format("TimeoutHandler - %s (UUID=%s)", message, uuid.toString()));
+			}
+		});
+		
+		thread.start();
 	}
 	
 	public static void main(String[] args) {
-		new Examples01();
+		new Examples03();
 	}
 }

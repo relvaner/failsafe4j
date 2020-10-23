@@ -1,6 +1,6 @@
 /*
- * safety4j - Safety Library
- * Copyright (c) 2014-2017, David A. Bauer
+ * failsafe4j - Failsafe Library
+ * Copyright (c) 2014-2020, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -28,33 +28,33 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package safety4j;
+package failsafe4j;
 
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import safety4j.utils.TimeoutTimer;
-import safety4j.utils.TimeoutTimerListener;
+import failsafe4j.utils.TimeoutTimer;
+import failsafe4j.utils.TimeoutTimerListener;
 
-public final class SafetyThread {
-	public static boolean run(final SafetyManager safetyManager, final String message, final Method method, final UUID uuid, int timeout) {
-		return run(safetyManager, message, method, uuid, timeout, false);
+public final class FailsafeThread {
+	public static boolean run(final FailsafeManager failsafeManager, final String message, final Method method, final UUID uuid, int timeout) {
+		return run(failsafeManager, message, method, uuid, timeout, false);
 	}
 	
-	public static boolean runAndCatchThrowable(final SafetyManager safetyManager, final String message, final Method method, final UUID uuid, int timeout) {
-		return run(safetyManager, message, method, uuid, timeout, true);
+	public static boolean runAndCatchThrowable(final FailsafeManager failsafeManager, final String message, final Method method, final UUID uuid, int timeout) {
+		return run(failsafeManager, message, method, uuid, timeout, true);
 	}
 	
-	protected static boolean run(final SafetyManager safetyManager, final String message, final Method method, final UUID uuid, int timeout, boolean catchThrowable) {
+	protected static boolean run(final FailsafeManager failsafeManager, final String message, final Method method, final UUID uuid, int timeout, boolean catchThrowable) {
 		final AtomicBoolean result = new AtomicBoolean(true);
 		
 		final Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				if (!catchThrowable)
-					SafetyMethod.run(safetyManager, message, method, uuid);
+					FailsafeMethod.run(failsafeManager, message, method, uuid);
 				else
-					SafetyMethod.runAndCatchThrowable(safetyManager, message, method, uuid);
+					FailsafeMethod.runAndCatchThrowable(failsafeManager, message, method, uuid);
 			}
 		});
 		
@@ -67,7 +67,7 @@ public final class SafetyThread {
 				if (message!=null)
 					System.out.printf("Method failed (timeout): %s (UUID: %s)%n", message, uuid.toString());
 				
-				safetyManager.notifyTimeoutHandler(message, uuid);
+				failsafeManager.notifyTimeoutHandler(message, uuid);
 				
 				thread.stop();
 			}
@@ -85,11 +85,11 @@ public final class SafetyThread {
 		return result.get();
 	}
 	
-	public static void run(final SafetyManager safetyManager, final Method method, final UUID uuid, int timeout) {
-		run(safetyManager, null, method, uuid, timeout);
+	public static void run(final FailsafeManager failsafeManager, final Method method, final UUID uuid, int timeout) {
+		run(failsafeManager, null, method, uuid, timeout);
 	}
 	
-	public static void runAndCatchThrowable(final SafetyManager safetyManager, final Method method, final UUID uuid, int timeout) {
-		runAndCatchThrowable(safetyManager, null, method, uuid, timeout);
+	public static void runAndCatchThrowable(final FailsafeManager failsafeManager, final Method method, final UUID uuid, int timeout) {
+		runAndCatchThrowable(failsafeManager, null, method, uuid, timeout);
 	}
 }

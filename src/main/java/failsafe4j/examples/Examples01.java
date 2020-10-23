@@ -1,6 +1,6 @@
 /*
- * safety4j - Safety Library
- * Copyright (c) 2014-2017, David A. Bauer
+ * failsafe4j - Failsafe Library
+ * Copyright (c) 2014-2020, David A. Bauer
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -28,10 +28,51 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package safety4j;
+package failsafe4j.examples;
 
 import java.util.UUID;
 
-public interface ErrorHandler {
-	public void handle(Throwable t, String message, UUID uuid);
+import failsafe4j.ErrorHandler;
+import failsafe4j.Method;
+import failsafe4j.FailsafeManager;
+import failsafe4j.FailsafeMethod;
+
+
+public class Examples01 {
+
+	public Examples01() {
+		FailsafeManager failsafeManager = new FailsafeManager();
+		failsafeManager.setErrorHandler(new ErrorHandler() {
+			@Override
+			public void handle(Throwable t, String message, UUID uuid) {
+				System.out.println("Exception: "+t.toString());
+				System.out.println("Message: "+message);
+				System.out.println("UUID: "+uuid.toString());
+			}
+		});
+		
+		FailsafeMethod.run(failsafeManager, "Methode 1", new Method() {
+			@Override
+			public void run(UUID uuid) {
+				@SuppressWarnings("unused")
+				int z = 67 / 0;
+			}
+
+			@Override
+			public void error(Throwable t) {
+				System.out.println(t.getMessage());
+			}
+			
+			@Override
+			public void after() {
+				System.out.println("Hello World!");
+			}
+		}, UUID.randomUUID());
+		
+		System.out.println("YES!");
+	}
+	
+	public static void main(String[] args) {
+		new Examples01();
+	}
 }
